@@ -1,0 +1,30 @@
+Metadata-Version: 2.1
+Name: converter-package
+Version: 1.3
+Summary: This converter library is able to transform the ACCORDION application model to K3s configuration files
+Home-page: UNKNOWN
+Author: Giannis Korontanis
+Author-email: gkorod2@gmail.com
+License: MIT
+Platform: UNKNOWN
+Description-Content-Type: text/markdown
+
+# Converter
+
+Converter is a subcomponent of the ACCORDION platform. It is being used by the Orchestrator and Lifecycle Manager components in order to translate the application model to K3s configuration files, action models, workflow models and matchmaking models
+
+## Installation
+
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+
+```bash
+pip3 install converter-package==0.9
+```
+
+## Usage
+Interface.py is an example of usage, it is available on the ACCORDION's Gitlab
+
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
+

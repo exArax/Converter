@@ -1,0 +1,166 @@
+tosca_definitions_version: tosca_simple_yaml_1_2
+
+description: Application model of PLEXUS Use Case
+
+
+imports:
+  - definitions/custom_types.yaml
+
+topology_template:
+  inputs:
+    ip:
+      type: string
+      description: IP of containers
+      required: false
+
+  node_templates:
+    Cloud_Framework:
+      type: ACCORDION.Cloud_Framework
+      properties:
+        application: plexus
+        deployment_phase:
+          - name: deploy
+            order: 1
+            components:
+              - component: localservice
+                type: container
+              - component: lsnuc
+                type: container
+        workflows:
+          - scenario: LocalService Hardware Overload
+            target: localservice
+            condition: component_cpu > 80% or component_memory > 80%
+            actions:
+              - name: terminate
+                components:
+                  - component: localservice
+                    type: container
+                order: 1
+              - name: deploy
+                components:
+                  - component: localservice
+                    type: container
+                order: 2
+          - scenario: LocalService Network Overload
+            target: localservice
+            condition: bandwidth > 80% or avg_latency > 20 ms
+            actions:
+              - name: terminate
+                components:
+                  - component: localservice
+                    type: container
+                order: 1
+              - name: deploy
+                components:
+                  - component: localservice
+                    type: container
+                order: 2
+          - scenario: LSNUC Hardware Overload
+            target: lsnuc
+            condition: component_cpu > 80% or component_memory > 80%
+            actions:
+              - name: terminate
+                components:
+                  - component: lsnuc
+                    type: container
+                order: 1
+              - name: deploy
+                components:
+                  - component: lsnuc
+                    type: container
+                order: 2
+          - scenario: LSNUC Network Overload
+            target: lsnuc
+            condition: bandwidth > 80% or avg_latency > 20 ms
+            actions:
+              - name: terminate
+                components:
+                  - component: lsnuc
+                    type: container
+                order: 1
+              - name: deploy
+                components:
+                  - component: lsnuc
+                    type: container
+                order: 2
+
+
+    EdgeNode1:
+      type: tosca.nodes.Compute.EdgeNode
+      properties:
+        building_type: mall
+      capabilities:
+        host:
+          properties:
+            num_cpus: 2
+            mem_size: 4096 MB
+            disk_size: 128 GB
+        os:
+          properties:
+            architecture: x86_64
+            type: linux
+            distribution: Ubuntu
+            version: 20.04
+
+
+    EdgeNode:
+      type: tosca.nodes.Compute.EdgeNode
+      properties:
+        wifi_antenna: true
+        building_type: mall
+      capabilities:
+        host:
+          properties:
+            num_cpus: 4
+            mem_size: 4096 MB
+            disk_size: 32 GB
+        os:
+          properties:
+            architecture: arm64
+            type: linux
+            distribution: Ubuntu
+            version: 20.04
+
+
+    LocalService:
+      type: Component
+      properties:
+        name:  localservice
+        application: plexus
+        external_ip: false
+        daemon_set: true
+        ip: {get_input: ip}
+        deployment_unit: container
+        storage_type: ephemeral
+      requirements:
+        - host: EdgeNode
+
+
+    LSNUC:
+      type: Component
+      properties:
+        name: lsnuc
+        application: plexus
+        external_ip: false
+        daemon_set: false
+        ip: { get_input: ip }
+        deployment_unit: container
+        storage_type: ephemeral
+        ports:
+          - port: 1883
+          - port: 5556
+          - protocol: UDP
+            port: 7777
+      requirements:
+        - host: EdgeNode1
+
+
+
+
+
+
+
+
+
+
+
