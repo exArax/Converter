@@ -1,6 +1,6 @@
 # Converter
 
-Converter is a subcomponent of the ACCORDION platform. It is being used by the Orchestrator and Lifecycle Manager components in order to translate the application model to K3s configuration files, action models, workflow models and matchmaking models. The Converter sucomponent requires to have access to Gitlab instance that developers use in ACCORDION. For that reason in the code of the converter there are parts that use an .env file to retrieve the saved tokens. This env file is not commited here, one should consider to generate access tokens in their repositories in order to generate the secrets for the docker images.
+The Converter is a subcomponent of the ACCORDION platform. It is being used by the Orchestrator and Lifecycle Manager components in order to translate the application model to K3s configuration files, action models, workflow models and matchmaking models. The Converter sucomponent requires to have access to Gitlab instance that developers use in ACCORDION. For that reason in the code of the converter there are parts that use an .env file to retrieve the saved tokens. This env file is not commited here, one should consider to generate access tokens in their repositories in order to generate the secrets for the docker images.
 
 ## Installation
 
