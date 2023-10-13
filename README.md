@@ -1,6 +1,10 @@
 # Converter
 
-Converter is a subcomponent of the ACCORDION platform. It is being used by the Orchestrator and Lifecycle Manager components in order to translate the application model to K3s configuration files, action models, workflow models and matchmaking models
+Converter is a reasoner for CEAML (Cloud Edge Application Modelling Language). CEAML is a TOSCA extension that is able to describe deployment and runtime adaptation of multicomponent applications. Converter is able to parse models written in CEAML and generate K3s files for the deployment of the application along with some other helpful submodels that can assist Cloud orchestrators.
+.The definitions of CEAML can be found in <a href=https://github.com/exArax/Converter/tree/main/application_models/definitions>application_models/definitions</a> and some examples of models are provided in <a href=https://github.com/exArax/Converter/tree/main/application_models/>application models</a>. 
+
+CEAML and Converter have already been used in the ACCORDION platform. The ACCORDION platform was financially supported by the European Union's Horizon 2020 research and innovation programme through grant agreement no 871793. The platform's vision was to simplify the deployment of applications with diverse requirements spanning the Cloud and Edge continuum. To achieve this goal, the platform employed both K3s and Kubevirt for application deployment, thereby supporting deployment units in the form of pods and virtual machines.
+Converter is being used by the Orchestrator and Lifecycle Manager of ACCORDION as a subcomponent in order to translate the application model to K3s configuration files, action models, workflow models and matchmaking models
 
 ## Installation
 

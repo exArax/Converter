@@ -65,17 +65,17 @@ def selector(name):
         url = 'http://app.accordion-project.eu:31724/application?name=UC 3&isLatest=true'
         token_name = 'gitlab+deploy-token-420906'
         token_pass = 'jwCSDnkoZDeZqwf2i9-m'
-        jsonResponse = open('intermidietmodel-UC3.json')
+        jsonResponse = open('intermediate_models_examples/intermediatemodel-UC3.json')
     if name == 'orbk':
         url = 'http://app.accordion-project.eu:31724/application?name=UC 2&isLatest=true'
         token_name = 'gitlab+deploy-token-420904'
         token_pass = 'gzP9s2bkJV-yeh1a6fn3'
-        jsonResponse = open('intermidietmodel-UC2.json')
+        jsonResponse = open('intermediate_models_examples/intermediatemodel-UC2.json')
     if name == 'ovr':
         url = 'http://app.accordion-project.eu:31724/application?name=UC 1&isLatest=true'
         token_name = 'gitlab+deploy-token-430087'
         token_pass = 'NDxnnzt9WvuR7zyAHchX'
-        jsonResponse = open('intermidietmodel-UC1.json')
+        jsonResponse = open('intermediate_models_examples/intermediatemodel-UC1.json')
     sample_string = token_name + ":" + token_pass
     sample_string_bytes = sample_string.encode("ascii")
     base64_bytes = base64.b64encode(sample_string_bytes)
