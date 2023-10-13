@@ -5,18 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8daf74e0-f397-4568-9dab-a8e764746908" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interface.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/intermidietmodel-UC1.json" beforeDir="false" afterPath="$PROJECT_DIR$/intermediate_models_examples/intermediatemodel-UC1.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/intermidietmodel-UC2.json" beforeDir="false" afterPath="$PROJECT_DIR$/intermediate_models_examples/intermediatemodel-UC2.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/intermidietmodel-UC3.json" beforeDir="false" afterPath="$PROJECT_DIR$/intermediate_models_examples/intermediatemodel-UC3.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tosca_orbk.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tosca_ovr.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tosca_plexus.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tosca_wordpress.yaml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

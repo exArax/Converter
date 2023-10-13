@@ -57,8 +57,8 @@ intermediate_model = callAppBucket(json_base64_string, url, name)
 deployment = Converter.scale_out_to_k8s(componentInfo, intermediate_model)
  ```
 ## More on Usage
-DeployInterface.py is an example of usage for the case of deployment. There is also the ScaleOutInterface.py that presents how to use Converter to create scale out files for ACCORDION, it is available on the ACCORDION's Gitlab
 
+To explore additional examples demonstrating the usage of the Converter, refer to the following links:
 
-## License
-[MIT](https://choosealicense.com/licenses/mit/)
+* <a href=https://github.com/exArax/Converter/blob/main/DeployInterface.py>DeployInterface.py</a> for insights on generating deployment files.
+* <a href=https://github.com/exArax/Converter/blob/main/ScaleOutInterface.py>ScaleOutInterface.py</a> to understand how Converter can be utilized to create scale-out files.
