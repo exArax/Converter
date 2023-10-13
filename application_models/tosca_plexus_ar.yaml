@@ -1,0 +1,92 @@
+tosca_definitions_version: tosca_simple_yaml_1_2
+
+description: Application model of PLEXUS Use Case
+
+
+imports:
+  - definitions/custom_types.yaml
+
+topology_template:
+  inputs:
+    ip:
+      type: string
+      description: IP of containers
+      required: false
+
+  node_templates:
+    Cloud_Framework:
+      type: ACCORDION.Cloud_Framework
+      properties:
+        application: plxar
+        deployment_phase:
+          - name: deploy
+            order: 1
+            components:
+              - component: gameserver
+                type: container
+        workflows:
+          - scenario: Network Overload
+            target: gameserver
+            condition: bandwidth > 80% or avg_latency > 20 ms
+            actions:
+              - name: local_scale_out
+                components:
+                  - component: gameserver
+                    type: container
+                order: 1
+          - scenario: QoE degredation
+            target: gameserver
+            condition: qoe_metric < 3
+            actions:
+              - name: scale_out
+                components:
+                  - component: gameserver
+                    type: container
+                order: 1
+
+
+    EdgeNode1:
+      type: tosca.nodes.Compute.EdgeNode
+      properties:
+        building_type: mall
+      capabilities:
+        host:
+          properties:
+            mem_size: 500 MB
+            disk_size: 3 GB
+        os:
+          properties:
+            architecture: x86_64
+            type: linux
+            distribution: Ubuntu
+            version: 20.04
+
+
+    Gameserver:
+      type: Component
+      properties:
+        name: gameserver
+        application: plxar
+        external_ip: true
+        daemon_set: false
+        ip: { get_input: ip }
+        deployment_unit: container
+        storage_type: ephemeral
+        ports:
+          - protocol: UDP
+            port: 7777
+      requirements:
+        - host: EdgeNode1
+
+
+
+
+
+
+
+
+
+
+
+
+

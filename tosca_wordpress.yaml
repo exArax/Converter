@@ -1,0 +1,225 @@
+tosca_definitions_version: tosca_simple_yaml_1_2
+
+description: Experiments with deployment of wordpress and mysql
+
+
+data_types:             
+  generate:
+    properties:
+      secret:
+        name: 
+          type: string
+        namespace:
+          type: string
+        literals:
+          type: list
+        resources:
+          type: list
+      order:
+         type: integer
+  discover:
+    propeties:
+      target:
+        type: string
+      order:
+        type: string
+  deploy:
+    properties:
+      images:
+        type: list
+
+  
+node_types:
+
+  tosca.nodes.Compute.EdgeNode:
+    derived_from: tosca.nodes.Compute
+    properties:
+      gpu_model:
+        model:
+          type: string
+          required: false
+        dedicated: 
+          type: boolean
+          default: true
+        type: map
+        required: false
+
+  tosca.nodes.Compute.CloudVM:
+    derived_from: tosca.nodes.Compute
+    properties:
+      gpu_model:
+        model:
+          type: string
+          required: false
+        dedicated:
+          type: boolean
+          default: true
+        type: map
+        required: false
+  
+      
+
+  ACCORDION.Cloud_Framework:
+    derived_from: tosca.nodes.Container.Application.Docker
+    properties:
+      actions:
+        type: map
+
+
+  WordPress.container:
+    derived_from: tosca.nodes.Container.Application.Docker
+    properties:
+      name:
+        type: string
+      application:
+        type: string
+      service:
+        type: boolean
+      ip:
+        type: string
+      port:
+        type: string
+      tier:
+        type: string
+      env:
+        type: list
+    requirements:
+      - host:
+          node: tosca.nodes.Compute.EdgeNode
+          relationship: hostedOn
+
+  MySQL.container:
+    derived_from: tosca.nodes.Container.Application.Docker
+    properties:
+      name:
+        type: string
+      application:
+        type: string
+      service:
+        type: boolean
+      ip:
+        type: string
+      port:
+        type: string
+      tier:
+        type: string
+      env:
+        type: list
+    requirements:
+      - host:
+          node: tosca.nodes.Compute.EdgeNode
+          relationship: hostedOn
+
+
+
+relationship_types:
+  hostedOn:
+    derived_from: tosca.relationships.Root
+    valid_target_types: [ tosca.capabilities.Node ]
+
+topology_template:
+  inputs:
+    ip:
+      type: string
+      description: IP of containers
+      required: false
+
+  node_templates:
+    Cloud_Framework:
+      type: ACCORDION.Cloud_Framework
+      properties:
+        actions:
+          deploy:
+            properties:
+              application: wordpress
+              images:
+                - wordpress:4.8-apache
+                - mysql:5.6
+              order: 1
+          connect:
+            properties:
+              frontend: wordpress
+              backend: mysql
+              application: wordpress
+              literals:
+                - password=YOUR_PASSWORD
+              order: 2
+
+    EdgeNode:
+      type: tosca.nodes.Compute.EdgeNode
+      properties:
+        gpu_model:
+          model: NVIDIA GeForce RTX 20-series
+          dedicated: true
+      capabilities:
+        host:
+          properties:
+            num_cpus: 1
+            mem_size: 512 MB
+            disk_size: 20 GB
+        os:
+          properties:
+            architecture: x86_64
+            type: linux
+
+    VM:
+      type: tosca.nodes.Compute.CloudVM
+      properties:
+        gpu_model:
+          model: NVIDIA GeForce RTX 20-series
+          dedicated: true
+      capabilities:
+        host:
+          properties:
+            num_cpus: 2
+            mem_size: 612 MB
+            disk_size: 40 GB
+        os:
+          properties:
+            architecture: x86_64
+            type: linux
+
+    wordpress.container:
+      type: WordPress.container
+      properties:
+        name:  wordpress
+        application: wordpress
+        service: false
+        ip: {get_input: ip}
+        port: 80
+        tier: frontend
+        env:
+          parameters: WORDPRESS_DB_HOST, WORDPRESS_DB_PASSWORD
+      requirements:
+        - host:
+            node: EdgeNode
+            relationship: hostedOn
+
+    mysql.container:
+      type: MySQL.container
+      properties:
+        name: mysql
+        application: wordpress
+        service: true
+        ip: {get_input: ip}
+        port: 3306
+        tier: backend
+        env:
+          parameters: MYSQL_ROOT_PASSWORD
+      requirements:
+        - host:
+            node: VM
+            relationship: hostedOn
+
+
+
+
+   
+     
+
+             
+
+   
+     
+    
+  

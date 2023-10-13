@@ -13,13 +13,6 @@ def convert_bytes(bytes):
     return output
 
 
-def manage_dependencies(dependencies, application):
-    for d in dependencies:
-        name = d.get('component')
-        new_name = application + "-" + name.lower()
-        d.update((k, new_name) for k, v in d.items() if v == name)
-
-
 def generate(nodelist, application):
     json_template = {}
     resourcelist = []
@@ -31,14 +24,13 @@ def generate(nodelist, application):
             edge_disk = str(convert_bytes(x.get_disk_size()))
             edge_mem = str(convert_bytes(x.get_mem_size()))
             edge_gpu_type = x.get_gpu_dedicated()
-            edge_gpu_model = x.get_gpu_model()
+            edge_gpu = x.get_gpu_model()
             edge_os = x.get_os()
             edge_architecture = x.get_architecture()
-            if edge_gpu_model != "None":
+            if edge_gpu is not None:
                 json_requirements = {'type': edge_node_name, 'os': edge_os, 'arch': edge_architecture,
                                      'hardware_requirements': {'cpu': str(edge_cpu), 'ram': edge_mem, 'disk': edge_disk,
-                                                               'gpu': {'brand': edge_gpu_model,
-                                                                       'dedicated': str(edge_gpu_type)}}}
+                                                               'gpu': {'model': edge_gpu, 'dedicated': str(edge_gpu_type)}}}
                 resourcelist.append(json_requirements)
             else:
                 json_requirements = {'type': edge_node_name, 'os': edge_os, 'arch': edge_architecture,
@@ -46,7 +38,7 @@ def generate(nodelist, application):
                                      }
                 resourcelist.append(json_requirements)
 
-        if x.get_type() == 'tosca.nodes.Compute.PublicCloud':
+        if 'PublicCloud' in x.get_type():
             vm_node_name = x.get_name()
             vm_cpu = x.get_num_cpu()
             vm_disk = str(convert_bytes(x.get_disk_size()))
@@ -64,7 +56,7 @@ def generate(nodelist, application):
 
     for x in nodelist:
         for y in resourcelist:
-            if x.get_host() == y.get('type'):
+            if x.get_node() == y.get('type'):
                 print(y)
                 print(x.get_name())
                 unit = x.get_unit()
@@ -74,9 +66,8 @@ def generate(nodelist, application):
                     if type(port) != list:
                         port_list = []
                         port_list.append(port)
-                        host = x.get_host()
+                        host = x.get_node()
                         result = ''.join([i for i in host if not i.isdigit()])
-
                         dependecy = x.get_dependency()
                         if not dependecy:
                             json_template[application].append({
@@ -89,7 +80,6 @@ def generate(nodelist, application):
                                 }
                             })
                         if dependecy:
-                            manage_dependencies(dependecy, application)
                             json_template[application].append({
                                 'component': application + "-" + name,
                                 'unit': unit,
@@ -101,7 +91,7 @@ def generate(nodelist, application):
                                 }
                             })
                     else:
-                        host = x.get_host()
+                        host = x.get_node()
                         result = ''.join([i for i in host if not i.isdigit()])
                         dependecy = x.get_dependency()
                         if not dependecy:
@@ -115,7 +105,6 @@ def generate(nodelist, application):
                                 }
                             })
                         if dependecy:
-                            manage_dependencies(dependecy, application)
                             json_template[application].append({
                                 'component': application + "-" + name,
                                 'unit': unit,
@@ -127,7 +116,7 @@ def generate(nodelist, application):
                                 }
                             })
                 else:
-                    host = x.get_host()
+                    host = x.get_node()
                     result = ''.join([i for i in host if not i.isdigit()])
                     dependecy = x.get_dependency()
                     if not dependecy:
@@ -140,7 +129,6 @@ def generate(nodelist, application):
                             }
                         })
                     if dependecy:
-                        manage_dependencies(dependecy, application)
                         json_template[application].append({
                             'component': application + "-" + name,
                             'unit': unit,

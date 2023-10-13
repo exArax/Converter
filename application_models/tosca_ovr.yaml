@@ -78,6 +78,33 @@ topology_template:
                     property: ip
                     to: localservice
                 order: 3
+          - scenario: ls QoE degredation in singleplayer
+            target: localservice
+            condition: qoe_metric < 3
+            actions:
+              - name: migrate
+                components:
+                  - component: localservice
+                    type: vm
+                order: 1
+          - scenario: ls QoE degredation in multiplayer
+            target: localservice
+            condition: qoe_metric < 3
+            actions:
+              - name: migrate
+                components:
+                  - component: localservice
+                    type: vm
+                order: 1
+          - scenario: relayserver QoE degredation
+            target: relayserver
+            condition: qoe_metric < 3
+            actions:
+              - name: migrate
+                components:
+                  - component: relayserver
+                    type: vm
+                order: 1
           - scenario: multiplayer LocalService latency or LocalService stops
             target: localservice
             condition: latency > 20ms or status == terminated
@@ -105,13 +132,13 @@ topology_template:
       properties:
         gpu_model:
           properties:
-            brand: nvidia
+            model: nvidia.com/TU117_GEFORCE_GTX_1650
             dedicated: true
       capabilities:
         host:
           properties:
-            num_cpus: 1
-            mem_size: 512 MB
+            num_cpus: 8
+            mem_size: 8 GB
             disk_size: 20 GB
         os:
           properties:
@@ -141,6 +168,7 @@ topology_template:
         ip: { get_input: ip }
         deployment_unit: vm
         flavor: win2k12-iso
+        instance: 1
         storage_type: ephemeral
         ports:
           - port: 5055
@@ -157,14 +185,32 @@ topology_template:
       properties:
         name:  localservice
         application: ovr
-        external_ip: false
+        external_ip: true
         daemon_set: false
+        instance: 1
         ip: {get_input: ip}
         deployment_unit: vm
         flavor: win2k12-iso
         storage_type: ephemeral
         ports:
-          - port: 9090
+          - protocol: UDP
+            port: 60001
+          - protocol: UDP
+            port: 60002
+          - protocol: UDP
+            port: 60003
+          - protocol: UDP
+            port: 60004
+          - protocol: UDP
+            port: 60005
+          - protocol: TCP
+            port: 60001
+          - protocol: TCP
+            port: 53872
+          - protocol: TCP
+            port: 3478
+          - protocol: TCP
+            port: 5349
         dependency:
           - component: relayserver
             property: ip

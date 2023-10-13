@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/tosca-to-k3s.iml" filepath="$PROJECT_DIR$/.idea/tosca-to-k3s.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/tosca-to-k3s-master.iml" filepath="$PROJECT_DIR$/.idea/tosca-to-k3s-master.iml" />
     </modules>
   </component>
 </project>

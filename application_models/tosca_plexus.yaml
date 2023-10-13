@@ -55,6 +55,24 @@ topology_template:
                   - component: localservice
                     type: container
                 order: 2
+          - scenario: ls QoE degredation
+            target: localservice
+            condition: qoe_metric < 3
+            actions:
+              - name: migrate
+                components:
+                  - component: localservice
+                    type: container
+                order: 1
+          - scenario: lsnuc QoE degredation
+            target: lsnuc
+            condition: qoe_metric < 3
+            actions:
+              - name: scale_in
+                components:
+                  - component: lsnuc
+                    type: container
+                order: 1
           - scenario: LSNUC Hardware Overload
             target: lsnuc
             condition: component_cpu > 80% or component_memory > 80%
@@ -92,9 +110,8 @@ topology_template:
       capabilities:
         host:
           properties:
-            num_cpus: 2
-            mem_size: 4096 MB
-            disk_size: 128 GB
+            mem_size: 500 MB
+            disk_size: 3 GB
         os:
           properties:
             architecture: x86_64
@@ -111,9 +128,9 @@ topology_template:
       capabilities:
         host:
           properties:
-            num_cpus: 4
-            mem_size: 4096 MB
-            disk_size: 32 GB
+            num_cpus: 1
+            mem_size: 500 MB
+            disk_size: 5 GB
         os:
           properties:
             architecture: arm64
@@ -141,7 +158,8 @@ topology_template:
       properties:
         name: lsnuc
         application: plexus
-        external_ip: false
+        external_ip: true
+        instance: 1
         daemon_set: false
         ip: { get_input: ip }
         deployment_unit: container
@@ -153,6 +171,8 @@ topology_template:
             port: 7777
       requirements:
         - host: EdgeNode1
+
+
 
 
 

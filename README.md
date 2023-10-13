@@ -1,13 +1,11 @@
 # Converter
 
-The Converter is a subcomponent of the ACCORDION platform. It is being used by the Orchestrator and Lifecycle Manager components in order to translate the application model to K3s configuration files, action models, workflow models and matchmaking models. The Converter sucomponent requires to have access to Gitlab instance that developers use in ACCORDION. For that reason in the code of the converter there are parts that use an .env file to retrieve the saved tokens. This env file is not commited here, one should consider to generate access tokens in their repositories in order to generate the secrets for the docker images.
+Converter is a subcomponent of the ACCORDION platform. It is being used by the Orchestrator and Lifecycle Manager components in order to translate the application model to K3s configuration files, action models, workflow models and matchmaking models
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
-
 ```bash
-pip3 install converter-package==1.3
+pip3 install converter-package==2.5
 ```
 
 ## 1. Parse Intermediate Model
@@ -47,5 +45,16 @@ actions_set = ActionModel.generate(nodelist, application_instance)
 ```python
 workflows_set = WorkflowModel.generate(nodelist, application_instance)
  ```
+
+## 8. Scale out
+```python
+json_base64_string, url, name = online_selector('plexus')
+intermediate_model = callAppBucket(json_base64_string, url, name)
+deployment = Converter.scale_out_to_k8s(componentInfo, intermediate_model)
+ ```
 ## More on Usage
-Interface.py is an example of usage, it is available on the ACCORDION's Gitlab
+DeployInterface.py is an example of usage for the case of deployment. There is also the ScaleOutInterface.py that presents how to use Converter to create scale out files for ACCORDION, it is available on the ACCORDION's Gitlab
+
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)

@@ -81,9 +81,18 @@ topology_template:
                 order: 1
           - scenario: onLowQoeEvent
             target: GameServer
-            condition: high latency
+            condition: qoe_metric < 3
             actions:
               - name: deploy
+                components:
+                  - component: GameServer
+                    type: container
+                order: 1
+          - scenario: onLowQoeEvent
+            target: GameServer
+            condition: qoe_metric < 3
+            actions:
+              - name: terminate
                 components:
                   - component: GameServer
                     type: container
@@ -112,6 +121,7 @@ topology_template:
         application: orbk
         external_ip: true
         daemon_set: false
+        instance: 1
         deployment_unit: container
         ip: {get_input: ip}
         storage_type: none

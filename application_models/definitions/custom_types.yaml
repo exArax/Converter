@@ -7,13 +7,13 @@ description: ACCORDION node types
 data_types:
 
   ports:
+    derived_from: tosca.datatypes.Root
     properties:
       protocol:
         type: string
         required: false
-        constraint:
-          - valid_values: [http,tcp,udp]
-          - pattern: '^[a-z0-9\-.]*$'
+        constraints:
+          - valid_values: [TCP,UDP]
       port:
         type: integer
     #gpu describes the gpu of and edge node.Model property describes the model of a gpu.
@@ -87,8 +87,7 @@ data_types:
       name:
         type: string
         constraints:
-          - valid_values: [deploy,requestSession,send,terminate,requestAnblick]
-          - pattern: '^[a-zA-Z]*$'
+          - valid_values: [deploy,requestSession,send,terminate,requestAnblick,migrate,local_scale_out,global_scale_out]
       #components are being used to describe a list of components that are related with an action
       components:
         type: list
@@ -209,6 +208,9 @@ node_types:
   Component:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
+      instance:
+        type: integer
+        required: false
       storage_type:
         type: string
         constraints:

@@ -117,6 +117,11 @@ def ReadFile(json):
             name = properties.get('name')
             container.set_name(name)
             container.set_application(application)
+            if properties.get('instance'):
+                instance_num = properties.get('instance')
+                container.set_instance(instance_num)
+            else:
+                container.set_instance(1)
             service = properties.get('external_ip')
             container.set_service(service)
             unit = properties.get('deployment_unit')
@@ -190,8 +195,11 @@ def ReadFile(json):
             if capabilities.get('host'):
                 host = capabilities.get('host')
                 host_properties = host.get('properties')
-                num_cpus = host_properties.get('num_cpus')
-                edgenode.set_num_cpu(num_cpus)
+                if host_properties.get('num_cpus'):
+                    num_cpus = host_properties.get('num_cpus')
+                    edgenode.set_num_cpu(num_cpus)
+                else:
+                    edgenode.set_num_cpu(None)
                 mem_size = host_properties.get('mem_size')
                 edgenode.set_mem_size(mem_size)
                 if host_properties.get('disk_size') is not None:

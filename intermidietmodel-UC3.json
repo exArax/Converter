@@ -1,32 +1,36 @@
 {
-   "details":{
-      "id":"60c09eb9f1e45743ca0e7573",
-      "name":"plexus",
-      "version":"0.0.1",
-      "isLatest":true
-   },
-   "registry":[
-      {
-         "repository":"registry.gitlab.com/accordion-project/wp6/uc_3/rs",
-         "version":"latest",
-         "id":"b777f84",
-         "size":"438.52MB",
-         "imageName":"accordion-project/wp6/uc_3/rs",
-         "component":"RemoteService"
-      },
-      {
-         "repository":"registry.gitlab.com/accordion-project/wp6/uc_3/ls",
-         "version":"latest",
-         "id":"34c0b29",
-         "size":"307.28MB",
-         "imageName":"accordion-project/wp6/uc_3/ls",
-         "component":"LocalService"
-      }
-   ],
-   "requirements":[
-      {
-         "environment":"PRODUCTION",
-         "toscaDescription":{
+    "details": {
+        "id": "63778954f16a13407bb1d5f8",
+        "name": "plexustest",
+        "version": "0.0.1",
+        "isLatest": true,
+        "status": "READY"
+    },
+    "registry": [
+        {
+            "repository": null,
+            "version": null,
+            "id": null,
+            "size": null,
+            "imageName": null,
+            "component": "localservice",
+            "location": "app.accordion-project.eu:31723/thomas.plex/uc3/ls:latest"
+        },
+        {
+            "repository": null,
+            "version": null,
+            "id": null,
+            "size": null,
+            "imageName": null,
+            "component": "lsnuc",
+            "location": "app.accordion-project.eu:31723/thomas.plex/uc3/ls_nuc:latest"
+        }
+    ],
+    "vmRegistry": [],
+    "requirements": [
+        {
+            "environment": "PRODUCTION",
+            "toscaDescription": {
   "tosca_definitions_version": "tosca_simple_yaml_1_2",
   "description": "Application model of PLEXUS Use Case",
   "imports": [
@@ -51,26 +55,12 @@
               "order": 1,
               "components": [
                 {
-                  "component": "LocalService",
-                  "type": "Container"
+                  "component": "localservice",
+                  "type": "container"
                 },
                 {
-                  "component": "LS_NUC",
-                  "type": "Container"
-                }
-              ]
-            },
-            {
-              "name": "requestAnblick",
-              "order": 2,
-              "components": [
-                {
-                  "component": "Anblick",
-                  "type": "Container"
-                },
-                {
-                  "component": "Traqus",
-                  "type": "Container"
+                  "component": "lsnuc",
+                  "type": "container"
                 }
               ]
             }
@@ -78,15 +68,15 @@
           "workflows": [
             {
               "scenario": "LocalService Hardware Overload",
-              "target": "LocalService",
+              "target": "localservice",
               "condition": "component_cpu > 80% or component_memory > 80%",
               "actions": [
                 {
                   "name": "terminate",
                   "components": [
                     {
-                      "component": "LocalService",
-                      "type": "Container"
+                      "component": "localservice",
+                      "type": "container"
                     }
                   ],
                   "order": 1
@@ -95,8 +85,8 @@
                   "name": "deploy",
                   "components": [
                     {
-                      "component": "LocalService",
-                      "type": "Container"
+                      "component": "localservice",
+                      "type": "container"
                     }
                   ],
                   "order": 2
@@ -105,15 +95,15 @@
             },
             {
               "scenario": "LocalService Network Overload",
-              "target": "LocalService",
+              "target": "localservice",
               "condition": "bandwidth > 80% or avg_latency > 20 ms",
               "actions": [
                 {
                   "name": "terminate",
                   "components": [
                     {
-                      "component": "LocalService",
-                      "type": "Container"
+                      "component": "localservice",
+                      "type": "container"
                     }
                   ],
                   "order": 1
@@ -122,8 +112,8 @@
                   "name": "deploy",
                   "components": [
                     {
-                      "component": "LocalService",
-                      "type": "Container"
+                      "component": "localservice",
+                      "type": "container"
                     }
                   ],
                   "order": 2
@@ -131,16 +121,16 @@
               ]
             },
             {
-              "scenario": "Anblick Hardware Overload",
-              "target": "Anblick",
+              "scenario": "LSNUC Hardware Overload",
+              "target": "lsnuc",
               "condition": "component_cpu > 80% or component_memory > 80%",
               "actions": [
                 {
                   "name": "terminate",
                   "components": [
                     {
-                      "component": "Anblick",
-                      "type": "Container"
+                      "component": "lsnuc",
+                      "type": "container"
                     }
                   ],
                   "order": 1
@@ -149,8 +139,8 @@
                   "name": "deploy",
                   "components": [
                     {
-                      "component": "Anblick",
-                      "type": "Container"
+                      "component": "lsnuc",
+                      "type": "container"
                     }
                   ],
                   "order": 2
@@ -158,16 +148,16 @@
               ]
             },
             {
-              "scenario": "Anblick Network Overload",
-              "target": "Anblick",
+              "scenario": "LSNUC Network Overload",
+              "target": "lsnuc",
               "condition": "bandwidth > 80% or avg_latency > 20 ms",
               "actions": [
                 {
                   "name": "terminate",
                   "components": [
                     {
-                      "component": "LocalService",
-                      "type": "Container"
+                      "component": "lsnuc",
+                      "type": "container"
                     }
                   ],
                   "order": 1
@@ -176,116 +166,8 @@
                   "name": "deploy",
                   "components": [
                     {
-                      "component": "LocalService",
-                      "type": "Container"
-                    }
-                  ],
-                  "order": 2
-                }
-              ]
-            },
-            {
-              "scenario": "LS_NUC Hardware Overload",
-              "target": "LC_NUC",
-              "condition": "component_cpu > 80% or component_memory > 80%",
-              "actions": [
-                {
-                  "name": "terminate",
-                  "components": [
-                    {
-                      "component": "LS_NUC",
-                      "type": "Container"
-                    }
-                  ],
-                  "order": 1
-                },
-                {
-                  "name": "deploy",
-                  "components": [
-                    {
-                      "component": "LS_NUC",
-                      "type": "Container"
-                    }
-                  ],
-                  "order": 2
-                }
-              ]
-            },
-            {
-              "scenario": "LS_NUC Network Overload",
-              "target": "LS_NUC",
-              "condition": "bandwidth > 80% or avg_latency > 20 ms",
-              "actions": [
-                {
-                  "name": "terminate",
-                  "components": [
-                    {
-                      "component": "LS_NUC",
-                      "type": "Container"
-                    }
-                  ],
-                  "order": 1
-                },
-                {
-                  "name": "deploy",
-                  "components": [
-                    {
-                      "component": "LS_NUC",
-                      "type": "Container"
-                    }
-                  ],
-                  "order": 2
-                }
-              ]
-            },
-            {
-              "scenario": "Traqus Hardware Overload",
-              "target": "Traqus",
-              "condition": "component_cpu > 80% or component_memory > 80%",
-              "actions": [
-                {
-                  "name": "terminate",
-                  "components": [
-                    {
-                      "component": "Traqus",
-                      "type": "Container"
-                    }
-                  ],
-                  "order": 1
-                },
-                {
-                  "name": "deploy",
-                  "components": [
-                    {
-                      "component": "Traqus",
-                      "type": "Container"
-                    }
-                  ],
-                  "order": 2
-                }
-              ]
-            },
-            {
-              "scenario": "Traqus Network Overload",
-              "target": "Traqus",
-              "condition": "bandwidth > 80% or avg_latency > 20 ms",
-              "actions": [
-                {
-                  "name": "terminate",
-                  "components": [
-                    {
-                      "component": "Traqus",
-                      "type": "Container"
-                    }
-                  ],
-                  "order": 1
-                },
-                {
-                  "name": "deploy",
-                  "components": [
-                    {
-                      "component": "Traqus",
-                      "type": "Container"
+                      "component": "lsnuc",
+                      "type": "container"
                     }
                   ],
                   "order": 2
@@ -306,26 +188,6 @@
               "num_cpus": 2,
               "mem_size": "4096 MB",
               "disk_size": "128 GB"
-            }
-          },
-          "os": {
-            "properties": {
-              "architecture": "x86_64",
-              "type": "linux",
-              "distribution": "Ubuntu",
-              "version": 20.04
-            }
-          }
-        }
-      },
-      "PublicCloud1": {
-        "type": "tosca.nodes.Compute.PublicCloud",
-        "capabilities": {
-          "host": {
-            "properties": {
-              "num_cpus": 2,
-              "mem_size": "4096 MB",
-              "disk_size": "500 GB"
             }
           },
           "os": {
@@ -362,74 +224,6 @@
           }
         }
       },
-      "PublicCloud": {
-        "type": "tosca.nodes.Compute.PublicCloud",
-        "capabilities": {
-          "host": {
-            "properties": {
-              "num_cpus": 1,
-              "mem_size": "512 MB",
-              "disk_size": "20 GB"
-            }
-          },
-          "os": {
-            "properties": {
-              "architecture": "x86_64",
-              "type": "linux",
-              "distribution": "Ubuntu",
-              "version": 20.04
-            }
-          }
-        }
-      },
-      "Traqus": {
-        "type": "Component",
-        "properties": {
-          "name": "traqus",
-          "application": "plexus",
-          "external_ip": false,
-          "daemon_set": false,
-          "ip": {
-            "get_input": "ip"
-          },
-          "deployment_unit": "Container",
-          "storage_type": "ephemeral",
-          "ports": [
-            {
-              "port": 9080
-            }
-          ]
-        },
-        "requirements": [
-          {
-            "host": "PublicCloud1"
-          }
-        ]
-      },
-      "Anblick": {
-        "type": "Component",
-        "properties": {
-          "name": "anblick",
-          "application": "plexus",
-          "external_ip": false,
-          "daemon_set": false,
-          "ip": {
-            "get_input": "ip"
-          },
-          "deployment_unit": "Container",
-          "storage_type": "ephemeral",
-          "ports": [
-            {
-              "port": 9081
-            }
-          ]
-        },
-        "requirements": [
-          {
-            "host": "PublicCloud"
-          }
-        ]
-      },
       "LocalService": {
         "type": "Component",
         "properties": {
@@ -440,7 +234,7 @@
           "ip": {
             "get_input": "ip"
           },
-          "deployment_unit": "Container",
+          "deployment_unit": "container",
           "storage_type": "ephemeral"
         },
         "requirements": [
@@ -449,17 +243,18 @@
           }
         ]
       },
-      "LS_NUC": {
+      "LSNUC": {
         "type": "Component",
         "properties": {
           "name": "lsnuc",
           "application": "plexus",
-          "external_ip": false,
+          "external_ip": true,
+          "instance": 2,
           "daemon_set": false,
           "ip": {
             "get_input": "ip"
           },
-          "deployment_unit": "Container",
+          "deployment_unit": "container",
           "storage_type": "ephemeral",
           "ports": [
             {
@@ -482,12 +277,13 @@
       }
     }
   }
-}}
-   ],
-   "metadata":{
-      "createdAt":"2021-03-25T13:41:55.042",
-      "createdBy":"admin@accordion.eu",
-      "modifiedAt":"2021-03-25T13:41:55.042",
-      "modifiedBy":"user@accordion.eu"
-   }
+}
+        }
+    ],
+    "metadata": {
+        "createdAt": "2022-11-18T13:32:04.519",
+        "createdBy": "gkorod@hua.gr",
+        "modifiedAt": "2022-11-18T13:32:04.519",
+        "modifiedBy": "unknown"
+    }
 }

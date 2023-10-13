@@ -4,7 +4,7 @@ from pathlib import Path
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 setup(name='converter_package',
-      version='1.3',
+      version='2.5',
       description='This converter library is able to transform the ACCORDION application model to K3s configuration files',
       author='Giannis Korontanis',
       author_email='gkorod2@gmail.com',
